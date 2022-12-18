@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 from collections import deque
-from scipy.stats import chi2_contingency
+from scipy.stats import chi2_contingency, chisquare
 
 min_threshold = 10
 max_threshold = 200
@@ -9,7 +9,7 @@ min_area = 60
 max_area = 135
 min_circularity = 0.2
 min_inertia_ratio = 0.55
-cap =cv2.VideoCapture('video8.mp4')
+cap =cv2.VideoCapture('36jogadas.mp4')
 cap.set(15, -4)
 i=1
 
@@ -70,14 +70,11 @@ while True:
         counter += 1
     if cv2.waitKey(25) & 0xFF == ord('q'):
         break
-values=list(leituras.values())
-# defining the table
-# interpret p-value
-print(values)
-expected_values = np.full(6,i/6).tolist()
-data = [values,expected_values]
-stat, p, dof, expected = chi2_contingency(data)
+values = i
+values = list(leituras.values())
+expected_values = np.full(6, (i-1) / 6).tolist()
 
+chisq, p = chisquare(values, f_exp=expected_values)
 
 alpha = 0.05
 print("O VALOR DE P É " + str(p))
